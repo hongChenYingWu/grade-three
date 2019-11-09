@@ -1,0 +1,28 @@
+#include<iostream>
+#include<cstring>
+#include<string>
+using namespace std;
+int main() {
+	string str;
+	long n, k;
+	int dis[30] = {};
+	cin >>n>>k>>str;
+	for (long i = 0; i < str.length(); i++) {
+		dis[str[i] - 'a']++;
+	}
+	//为减少遍历次数，用dis数组存储应该删除的各字符个数
+	for (int i = 0; i < 26; i++) {
+		if (k > dis[i]) k -= dis[i];
+		else {
+			dis[i] = k;
+			k = 0;
+		}
+	}
+	for ( int i = 0; i < str.length(); i++) {
+		if (dis[str[i] - 'a']) dis[str[i] - 'a']--;
+		else cout << str[i];
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
