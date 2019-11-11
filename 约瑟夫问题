@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<iostream>
+#include<cstring>
+using namespace std;
+int a[1000];
+//用0和1表示数组各元素的状态，不必改变元素数值就可以改变输出
+int main() {
+	int n, m, flag;
+	while (cin >> n >> m) {
+		memset(a, 1, sizeof(a));
+		flag = n;
+		//用来记录是否所有人都报完了数
+		int num = 0;
+		//用来记录是否达到m个数，达到则报数
+		for (int i = 0;flag; i++) {
+			if (i >= n)  i = i % n;
+			//反复循环
+			if (a[i]) {
+				num++;
+			}
+			if (num == m) {
+				if(flag>=2) cout << (i + 1) << " ";
+				else cout << (i + 1) << endl;
+				//输出的格式有要求
+				a[i] = 0;
+				flag--;
+				num = 0;
+			}	
+		}
+	}
+	return 0;
+}
