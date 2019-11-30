@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+#define MAXN 2
+#define MAXM 2
+using namespace std;
+ void multiply(int a[MAXN][MAXM], int b[MAXN][MAXM] ) {
+	 int c[MAXN][MAXM];
+	 //用c数组作为寄存器存放矩阵相乘的运算结果，结束后再将结果赋给a数组
+	 memset(c, 0, sizeof(c));
+	for (int i = 0; i < MAXN; i++) {
+		for (int j = 0; j < MAXM; j++) {
+			for (int k = 0; k < MAXM; k++) {
+				c[i][j] +=a[i][k] * b[k][j];
+				c[i][j] %= 10000;
+			}
+		}
+	}
+	memcpy(a, c, sizeof(c));
+}
+int quick_pow(int n) {
+	int x[MAXN][MAXN] = { 1,1,1,0 };
+	int res[MAXN][MAXM] = { 1,0,0,1 };
+	//res矩阵初始化为单位矩阵
+	while (n) {
+		if (n & 1) multiply(res, x);
+		multiply(x, x);
+		n >>= 1;
+	}
+	return res[0][1];
+	//n个x矩阵相乘结果的第一行第二列即为所求结果
+}
+int main() {
+	int t;
+	cin >> t;
+	while (t--) {
+		int n;
+		cin >> n;
+		cout << quick_pow(n)<<endl;
+	}
+	system("pause");
+	return 0;
+}
