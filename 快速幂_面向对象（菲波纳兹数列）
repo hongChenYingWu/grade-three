@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+#define MAXN 2
+#define MOD (int)1e4
+using namespace std;
+struct Matrix {
+	int mat[MAXN][MAXN];
+	//矩阵转化为结构体成员变量
+	Matrix operator*(Matrix const &b)const {
+		//将运算符重载函数定义在结构体中
+		Matrix res = { 0,0,0,0 };
+		//矩阵相乘时每一项要初始化为0
+		for (int i = 0; i < MAXN; i++) {
+			for (int j = 0; j < MAXN; j++) {
+				for (int k = 0; k < MAXN; k++) {
+					res.mat[i][j] = (res.mat[i][j] + this->mat[i][k] * b.mat[k][j]) % MOD;
+				}
+			}
+		}
+		return res;
+	}
+};
+Matrix pow_mod(Matrix base, int n) {
+	Matrix res;
+	memset(res.mat, 0, sizeof(res.mat));
+	for (int i = 0; i < MAXN; i++) res.mat[i][i] = 1;
+	//将快速幂矩阵乘法的结果res初始化为单位矩阵
+	while (n) {
+		if (n & 1) res = res * base;
+		base = base * base;
+		n >>= 1;
+	}
+	return res;
+}
+int main() {
+	int t;
+	cin >> t;
+	while (t--) {
+		Matrix base;
+		base = { 1,1,1,0 };
+		int n;
+		cin >> n;
+		Matrix ans = pow_mod(base, n);
+		cout << ans.mat[0][1] << endl;
+		//n个base矩阵相乘的结果的第一行第二列恰巧就是所求的答案
+	}
+	return 0;
+	system("pause");
+}
