@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAXN 100
+#define MAXM 100
+int a[] = { -1,0,1,0,-1,1,1,-1 };
+int b[] = { 0,1,0,-1,-1,-1,1,1 };
+//用a，b数组存储所有的走法，便于点的遍历
+struct Mine_field {
+	char node[MAXN][MAXM];
+	int n, m;
+	//n,m作为区域的长，宽也要作为结构体的成员变量
+	Mine_field() {
+		memset(node, ' ', sizeof(node));
+	}
+	//将字符串数组都初始化为‘ ’，便于判定
+	void mine_num() {
+		//对区域中的每个点求出其周围八个点的地雷数
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				int num = 0;
+				if (node[i][j] == '*') continue;
+				//当该点为地雷时不做变动
+				for (int k = 0; k < 8; k++) {
+					if (node[i + a[k]][j + b[k]] == '*'&& is_field(i + a[k], j + b[k])) num++;
+				}
+				//对该点周围的八个点进行遍历
+				node[i][j] = num + '0';
+			}
+		}
+	}
+	bool is_field(int x, int y) {
+		//判断某点是否在界内的函数
+		if (x >= 0 && x <= n - 1 && y >= 0 && y <= m - 1)
+			return true;
+		else return false;
+	}
+	void scanf() {
+		//为简化输入输出代码量，将输入输出过程封装为成员函数
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++)
+				cin >> node[i][j];
+		}
+	}
+	void print() {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++)
+				cout << node[i][j];
+			cout << endl;
+		}
+		cout << endl;
+	}
+};
+int main() {
+	Mine_field mine_field[50];
+	int i = 0;
+	while (cin >> mine_field[i].n >> mine_field[i].m) {
+		if (mine_field[i].n == 0 && mine_field[i].m == 0) break;
+		mine_field[i].scanf();
+		mine_field[i].mine_num();
+		i++;
+	}
+	int num = i;//用num来存储总共输入的地雷图数目
+	for (i = 0; i < num; i++) {
+		cout << "Field #" << i + 1 << ":" << endl;
+		mine_field[i].print();
+	}
+	system("pause");
+	return 0;
+}
