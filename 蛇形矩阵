@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MAX 101
+int main() {
+	int x;
+	int a[MAX][MAX];
+	while (cin >> x) {
+		int num = 1;
+		for (int i = 0; i < x; i++) {
+			int flag = i;
+			for (int j = 0; flag >= 0; j++, flag--) {
+				a[flag][j] = num;
+				num++;
+			}
+		}
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j <x-i; j++) {
+				cout << a[i][j] << " ";
+			}
+			cout << endl;
+		}
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}
+
