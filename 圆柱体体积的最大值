@@ -1,0 +1,23 @@
+#include<iostream>
+using namespace std;
+#define PI 3.14159265358979323846
+//pai定义为常量
+//函数最值问题
+int main() {
+	double result1, result2, w, h, r;
+	//函数中一般定义为double数据类型
+	while (cin >> w >> h) {
+		if (w == 0 && h == 0) break;
+		r = w / (2 *PI);
+		//根据限制得出该表达式的最值点
+		result1 = PI * r*r*(h - 2 * r);
+		//先按表达式的不同进行分类，然后用max取两种情况的最大值
+		r = h / (2 * PI + 2);
+		r = r * 2 > w ? w / 2 : r;
+		//当最值受到条件限制时，就要根据常量数据的比较调整最值，也就是不同条件下最值不同
+		result2 = PI * r*r*w;
+		double result = (result1 > result2) ? result1 : result2;
+		printf("%.3f\n", result);
+	}
+	return 0;
+}
