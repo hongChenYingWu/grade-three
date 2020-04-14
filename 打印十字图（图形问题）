@@ -1,0 +1,50 @@
+#include<iostream>
+using namespace std;
+int main() {
+	int n,bian;
+	cin >> n;
+	char a[200][200];
+	int len = 5 + 4 * n;
+	//图像的边长
+	for (int i = 1; i <= len; i++) {
+		for (int j = 1; j <= len; j++)
+			a[i][j] = '.';
+		//先给图像数据赋初值
+	}
+	for (int i = -2; i <= 2; i++) {
+		a[len / 2 + 1 + i][len / 2 + 1] = '$';
+		a[len / 2 + 1 ][len / 2 + 1+i] = '$';
+		//因为图形对称，交换横纵坐标即可
+	}
+	for (int i = 0; i < n; i++) {
+		int x = 2 * i;
+		bian = len-4*i;
+		//每一层的图像起始坐标和边长都不同
+		for (int j = 1; j <= 3; j++) {
+			//多行赋值合并到一个循环中
+			a[x+3][x+j] = '$';
+			a[x+bian - 2][x+j] = '$';
+			a[x+j][x+3] = '$';
+			a[x+j][x+bian-2] = '$';
+			//两组对称的线
+		}
+		for (int j = bian - 2; j <= bian; j++) {
+			a[x + 3][x + j] = '$';
+			a[x + bian - 2][x + j] = '$';
+			a[x + j][x + 3] = '$';
+			a[x + j][x + bian - 2] = '$';
+		}
+		for (int j = 3; j <= bian - 2; j++) {
+			a[x + 1][x + j] = '$';
+			a[x + bian][x + j] = '$';
+			a[x + j][x + 1] = '$';
+			a[x + j][x + bian] = '$';
+		}
+	}
+	for (int i = 1; i <= len; i++) {
+		for (int j = 1; j <= len; j++)
+			cout << a[i][j];
+		cout << endl;
+	}
+	return 0;
+}
