@@ -1,0 +1,35 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int a[9] = { 1,2,3,4,5,6,7,8,9 }, sum = 0;
+void d(int n) {
+	int n1 = 0;
+	//对n1，n2，n3的所有情况进行穷举
+	for (int i = 0; i <= 6; i++) {
+		//尽可能减少穷举的次数
+		n1 = n1 * 10 + a[i];
+		if (n1 > n) break;//剪枝
+		int n2 = 0;
+		for (int j = i+1; j <= 7; j++) {
+			//三层循环中，每层循环之间有关系
+			n2 = n2 * 10 + a[j];
+			int n3 = 0;
+			for (int k = j + 1; k <= 8; k++) {
+				n3= n3 * 10 + a[k];
+				if (n3 > n2) break;//剪枝
+			}
+			if (n == (n1 + n2 / n3) && n2%n3 == 0)  sum++;
+			//前两个循环确定后第三个循环就确定了，在第二层循环判定即可
+		}
+	}
+}
+int main() {
+	int n;
+	cin >> n;
+	do {
+		d(n);
+	} while (next_permutation(a, a + 9));
+	//利用系统自带的全排列函数进行穷举搜索
+	cout << sum;
+	return 0;
+}
