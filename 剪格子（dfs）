@@ -1,0 +1,54 @@
+//剪格子问题较难考虑全面，比如一个点四周可能同时剪两个点
+//下述代码仅仅是找到一条最短路径
+#include<iostream>
+using namespace std;
+int a[10][10];
+int dx[4] = { 0,1,0,-1 };
+int dy[4] = { 1,0,-1,0 };
+bool isv[10][10] = { 0 };//用来判定该点是否已经访问过的数组
+int m, n, sum;
+bool judge(int x, int y, int num) {
+	//用来判断下一点是否可跳的函数
+	if (x<1 || y<1 || x>n || y>m) return 1;
+	if (isv[x][y]) return 1;//越界或者已经访问过
+	if (num + a[x][y] > sum / 2) return 1;//走过路径的数值过大
+	return 0;
+}
+int dfs(int x, int y, int num) {
+	//与全排列类似，递归穷举搜索
+	if (num == sum / 2) {
+		return 1;
+	    //搜索到该处就结束，与全排列不同，不必将所有可能列出，搜索到的是最短路径
+	}
+	for (int i = 0; i < 4; i++) {
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		if (judge(nx, ny, num)) continue;
+		//下一跳可以走
+		isv[nx][ny] = true;
+		//重要，要走先把下一步的点置为true，递归后还要置回
+		int res = dfs(nx, ny, num + a[nx][ny]);
+		if (res) return res + 1;//递归所用的公式
+		isv[nx][ny] = false;
+	}
+	return 0;//递归的另一个返回值，若当前路径走不通，则返回0
+}
+int main() {
+	cin >> m >> n;
+	sum = 0;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			cin >> a[i][j];
+			sum += a[i][j];
+		}
+	}
+		if (sum % 2) {
+			cout << 0 << endl;
+		}
+		else {
+			isv[1][1] = true;
+			cout << dfs(1, 1, a[1][1]);
+			//左上角的点为出发点，初始化该递归函数和isv数组
+		}
+	return 0;
+}
