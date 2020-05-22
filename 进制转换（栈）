@@ -1,0 +1,17 @@
+#include<iostream>
+using namespace std;
+#include<stack>
+int main() {
+	int n;
+	stack <int>sta;
+	cin >> n;
+	while (n) {
+		sta.push(n % 8);
+		n = n / 8;
+	}
+	while (!sta.empty()) {
+		cout<<sta.top();
+		sta.pop();
+	}
+	return 0;
+}
