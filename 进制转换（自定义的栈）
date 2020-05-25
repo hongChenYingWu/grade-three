@@ -1,0 +1,54 @@
+//利用自定义的栈数据结构 解决进制转换问题
+#include<iostream>
+#include<stack>
+using namespace std;
+#define STACK_INIT_SIZE 100
+#define STACKINCREMENT 100
+//自定义的栈采用的顺序存储结构
+typedef  int ElemType;
+//栈中的元素类型可以自己定义
+namespace a { //命名空间，自定义栈数据结构，避免与库函数名重复
+	struct stack {
+		ElemType* base, *top;//两个元素前都要加*，否则系统无法识别
+		int stacksize;//顺序结构的栈所分配的内存空间
+		stack() {
+			base = (ElemType*)malloc(STACK_INIT_SIZE * sizeof(ElemType));
+			//malloc申请的内存在程序结束后会自动释放
+			top = base;
+			stacksize = STACK_INIT_SIZE;
+		}
+		void push(ElemType e) {
+			if (top - base >= stacksize) {
+				base = (ElemType*)realloc(base, (stacksize + STACKINCREMENT) * sizeof(ElemType));
+				//realloc函数是新分配空间（将原来空间的数据复制到该空间），原来的空间自动释放
+				top = base + stacksize;
+				stacksize += STACKINCREMENT;
+			}
+			*top++ = e;
+		}
+		ElemType getTop() {
+			return *(top - 1);
+		}
+		void pop() {
+			top--;
+		}
+		bool empty() {
+			if (top == base) return true;
+			else return false;
+		}
+	};
+}
+int main() {
+	int n;
+	a::stack sta;
+	cin >> n;
+	while (n) {
+		sta.push(n % 8);
+		n = n / 8;
+	}
+	while (!sta.empty()) {
+		cout<<sta.getTop();
+		sta.pop();
+	}
+	return 0;
+}
