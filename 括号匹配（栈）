@@ -1,0 +1,34 @@
+#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+int main() {
+	stack<char>sta;
+	string str;
+	while (cin >> str) {
+		if (str == "000") break;
+		//将要进行括号匹配检验的代码压缩后直接输入
+		for (int i = 0; i < str.length(); i++) {
+			if ((str[i] == '{') || (str[i] == '[') || (str[i] == '('))
+				sta.push(str[i]);
+			//若是左括号，作为当前最急迫事件压入栈中
+			else if (str[i] == '}') {
+				if ((sta.top() != '{') || sta.empty()) { cout << "括号不匹配"; return 0; }
+				//当括号种类不匹配或者右括号数量多时，非法情况
+				else  sta.pop();
+			}
+			else if (str[i] == ']') {
+				if ((sta.top() != '[') || sta.empty()) { cout << "括号不匹配"; return 0; }
+				else  sta.pop();
+			}
+			else if (str[i] == ')') {
+				if ((sta.top() != '(') || sta.empty()) { cout << "括号不匹配"; return 0; }
+				else  sta.pop();
+			}
+		}
+	}
+	if (sta.empty()) cout << "括号匹配";
+	else   cout << "括号不匹配";
+	//左括号数量多，非法情况
+	return 0;
+}
