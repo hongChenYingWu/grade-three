@@ -1,0 +1,69 @@
+//dfs深度优先算法并不能找到最优解，只能按照给定的方向顺序搜索到一条可连通路径
+#include<iostream>
+#include<stack>
+#define LENGTH 10
+using namespace std;
+int map[10][10] =
+{ {1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,1,0,0,0,1,0,1},
+  {1,0,0,1,0,0,0,1,0,1},
+  {1,0,0,0,0,1,1,0,0,1},
+  {1,0,1,1,1,0,0,0,0,1},
+  {1,0,0,0,1,0,0,0,0,1},
+  {1,0,1,0,0,0,1,0,0,1},
+  {1,0,1,1,1,0,1,1,0,1},
+  {1,1,0,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,1,1,1,1} };
+//对图像进行初始化，0表示通道，1表示墙壁
+int a[4] = { 0,1,0,-1 };
+int b[4] = { 1,0,-1,0 };
+//决定搜索顺序
+struct Node {
+	int x;//节点所在行
+	int y;//节点所在列
+	int di;//下一个可走的节点的方位号,当di大于3时则该结点弹出栈，便于回溯
+};
+stack <Node> path;
+bool toPath(int x1,int y1,int x2,int y2) {
+	//当存在起点到终点的路径时，返回true
+	Node node = { x1,y1,0 };                                                                                                           
+	path.push(node);
+	//将起点放入栈中，初始化
+	map[node.x][node.y] = 1;
+	//将已经在路径中的节点和曾经在路径中但是被舍弃的节点进行标记不通，否则会在死胡同转圈。
+	while (!path.empty()) {
+		node = path.top();
+		if (node.x == x2 && node.y == y2) {
+			//当栈顶元素就是终点时，表示可通，结束函数
+			return true;
+		}
+		while (node.di < 4) {
+			//多次判定吓一跳横纵坐标是否满足要求
+			int dx = node.x + a[node.di];
+			int dy = node.y + b[node.di];
+			if (!map[dx][dy]) {
+				Node nNode = { dx,dy,0 };
+				path.push(nNode);
+				map[dx][dy] = 1;
+				break;//只需找到一条可通的路径就跳出，与广度优先搜索不同
+			}
+			else node.di++;//当前方向不可通
+		}
+		if(node.di>=4) path.pop( );//当当前节点四个方向都不可通，则弹出该结点回溯
+	}
+	return false;//当栈为空时，说明不可通
+}
+int main() {
+	toPath(1, 1, 8, 8);
+	stack <Node> sta;
+	//新建一个栈对象，实现对path的逆序输出
+	while (!path.empty()) {
+		sta.push(path.top());
+		path.pop();
+	}
+	while (!sta.empty()) {
+		cout <<"("<< sta.top().x << "," << sta.top().y <<")"<< endl;
+		sta.pop();
+	}
+	return 0;
+}
