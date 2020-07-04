@@ -1,0 +1,82 @@
+#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+stack <char>optr;
+stack <double>opnd;
+//为操作数和运算符分别设置一个栈空间
+char precede[][8] = {
+	{'0','+','-','*','/','(',')','#'},
+    {'+','>','>','<','<','<','>','>'},
+	{'-','>','>','<','<','<','>','>'},
+	{'*','>','>','>','>','<','>','>'},
+	{'/','>','>','>','>','<','>','>'},
+	{'(','<','<','<','<','<','=','e'},
+	{')','>','>','>','>','e','>','>'},
+	{'#','<','<','<','<','<','e','='}
+};
+//按照优先级表格再运算符栈中判断相邻运算符的优先级
+char judge(char a, char b) {
+	//查找相应两个运算符关系在表中的优先级
+	int i, j;
+	for ( i = 1; i <= 7; i++) {
+		if (precede[i][0] == a) break;
+	}
+	for ( j = 1; j <= 7; j++) {
+		if (precede[0][j] == b) break;
+	}
+	return precede[i][j];
+}
+double opreate(double a, double b,char t) {
+    //将从运算符栈和运算数栈中取出的元素进行运算得出结果
+	switch (t) {
+	case'+':return b + a; break;
+	case'-':return b - a; break;
+	case'*':return b * a; break;
+	case'/':return b / a;
+	}
+}
+void evaluate(string str) {
+	//计算表达式的值
+	optr.push('#');
+	//为运算符栈初始化，放入#
+	int i = 0,flag=0;
+	while (!optr.empty()) {
+		char c = str[i];
+		if (c >= '0'&&c <= '9'){
+			if (flag) {//用flag判断上一个字符是否为数字字符
+				double t = opnd.top();
+				opnd.pop();
+				opnd.push(t * 10 + c - '0');
+				i++;}
+			else {
+				opnd.push(c-'0');
+				flag = 1; i++;}
+		}
+		else {flag = 0;
+			switch (judge(optr.top(),c)) {
+			case'e':cout << "输入的表达式有误，请重新输入！" << endl; return ;
+			case'<':optr.push(c); i++; break;
+			//当栈顶元素的优先级低时，将读入的字符写入栈
+			case'=':optr.pop(); i++; break;
+			//当栈顶元素的优先级和读入字符相等时，弹出栈顶元素
+			case'>':double a = opnd.top(); opnd.pop();
+				double b = opnd.top(); opnd.pop();
+				char t = optr.top(); optr.pop();
+				opnd.push(opreate(a, b, t));
+				break;
+			//当栈顶元素优先级高，先退栈运算并将运算结果入栈
+			}
+		}
+	}
+	cout << opnd.top()<<endl;
+	opnd.pop(); return;
+	//最后在操作数栈中剩余的一个就是表达式的值
+}
+int main(){
+	string str;
+	while (cin >> str) {
+		evaluate(str);
+	}
+	return 0;
+}
