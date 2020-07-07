@@ -1,0 +1,93 @@
+//利用自定义的栈数据结构
+#include<iostream>
+#include<fstream>
+#include<queue>
+using namespace std;
+#define STACK_INIT_SIZE 100
+#define STACKINCREMENT 100
+//自定义的栈采用的顺序存储结构
+typedef  char ElemType;
+//栈中的元素类型可以自己定义
+namespace a { //命名空间，自定义栈数据结构，避免与库函数名重复
+	struct stack {
+		ElemType* base, *top;//两个元素前都要加*，否则系统无法识别
+		int stacksize;//顺序结构的栈所分配的内存空间
+		stack() {
+			base = (ElemType*)malloc(STACK_INIT_SIZE * sizeof(ElemType));
+			//malloc申请的内存在程序结束后会自动释放
+			top = base;
+			stacksize = STACK_INIT_SIZE;
+		}
+		void push(ElemType e) {
+			if (top - base >= stacksize) {
+				base = (ElemType*)realloc(base, (stacksize + STACKINCREMENT) * sizeof(ElemType));
+				//realloc函数是新分配空间（将原来空间的数据复制到该空间），原来的空间自动释放
+				top = base + stacksize;
+				stacksize += STACKINCREMENT;
+			}
+			*top++ = e;
+		}
+		ElemType getTop() {
+			return *(top - 1);
+		}
+		void pop() {
+			top--;
+		}
+		bool empty() {
+			if (top == base) return true;
+			else return false;
+		}
+		void clear() {
+			//将栈中元素清空
+			while (!this->empty()) {
+				this->pop();
+			}
+		}
+		void reverse() {
+			//将当前的栈中元素顺序倒置
+			//this指向引用该成员函数时的当前对象
+			queue <ElemType>que;
+			while (!this->empty()) {
+				que.push(this->getTop());
+				this->pop();
+			}
+			while (!que.empty()) {
+				this->push(que.front());
+				que.pop();
+			}
+		}
+	};
+}
+void lineEdit(){
+	a::stack cache;
+	//将键盘输入的字符行缓存到该栈中
+	string path = "D:\\Desktop\\test.txt";
+	ofstream fout(path);
+	//打开文件，准备读写
+	while (1) {
+		char c = getchar();
+		if (c == '\n') {
+			cache.reverse();
+			while (!cache.empty()) {
+				fout << cache.getTop();
+				cache.pop();
+			}
+			fout << endl;
+			cout << "本行已经成功保存!"<<endl;
+		}
+		//当每输入一行完成后，将缓冲区的内容读入文件
+		else {
+			switch (c) {
+			case '#':cache.pop(); break;
+			case'@':cache.clear(); break;
+				//清空当前行
+			default:cache.push(c);
+			}
+		}
+	}
+	fout.close();
+}
+int main() {
+	lineEdit();
+	return 0;
+}
