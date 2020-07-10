@@ -1,0 +1,23 @@
+#include<iostream>
+#include<queue>
+#include<string>
+using namespace std;
+int main() {
+	queue<string>que;
+	string str; char c;
+	cout << "1.挂号"<<endl<<"2.下一位"<<endl<<"3.查询等待人数"<<endl;
+	while (cin >> c) {
+		switch (c) {
+		case '1':
+			cin >> str;
+			que.push(str);
+			cout << "挂号成功！"<<endl; break;
+		case '2':
+			cout << "下一位就诊的是：" << que.front()<<endl;
+			que.pop(); break;
+		case '3':
+			cout << "当前等待人数为：" << que.size()<<endl;
+		}
+	}
+	return 0;
+}
