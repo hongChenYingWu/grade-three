@@ -1,0 +1,69 @@
+#include<iostream>
+#include<string>
+using namespace std;
+/****************/
+typedef string ElemType;
+typedef struct node{
+	ElemType data;
+	struct node* next;
+}node,*ptr;//定义了结点类型和结点的指针类型
+namespace a {
+    struct queue {
+		//队列因为首尾都进行存取操作，使用链表存储结构更加方便
+		ptr head, rear;//只需要把头指针和尾指针放入,用指针修改数据
+		int qsize;
+		queue(){
+			head= new node;
+			rear = head;
+			head->next = NULL;
+			qsize = 0;
+		}
+	    void push(ElemType e) {
+			ptr p =new node;
+			p->data = e; p->next = NULL;
+			rear->next = p;
+			//先申请空间，修改数据的值，再修改尾指针
+			rear = p;
+			qsize++;
+		}
+		ElemType front() {
+			return head->next->data;
+		}
+		void pop() {
+			ptr p= head->next;
+			head->next = p->next;
+			if (rear == p) rear = head;
+			//一般情况不用修改尾指针，只有当队列中只有一个元素时要修改
+			delete p;
+			qsize--;
+		}
+		int size() {
+			return qsize;
+		}
+		bool empty() {
+			if (head== rear) return true;
+			else return false;
+		}
+	};
+}
+/******************/
+int main() {
+	a::queue que;
+	string str; char c;
+	cout << "1.挂号"<<endl<<"2.下一位"<<endl<<"3.查询等待人数"<<endl;
+	while (cin >> c) {
+		switch (c) {
+		case '1':
+			cin >> str;
+			que.push(str);
+			cout << "挂号成功！"<<endl; break;
+		case '2':
+			if(!que.empty())cout << "下一位就诊的是：" << que.front()<<endl;
+			else cout << "无挂号记录";
+			que.pop(); break;
+		case '3':
+			cout << "当前等待人数为：" << que.size()<<endl;
+		}
+	}
+	return 0;
+}
