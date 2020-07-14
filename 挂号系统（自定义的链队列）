@@ -22,30 +22,6 @@ namespace a {
 			ptr p =new node;
 			p->data = e; p->next = NULL;
 			rear->next = p;
-#include<iostream>
-#include<string>
-using namespace std;
-/****************/
-typedef string ElemType;
-typedef struct node{
-	ElemType data;
-	struct node* next;
-}node,*ptr;//定义了结点类型和结点的指针类型
-namespace a {
-    struct queue {
-		//队列因为首尾都进行存取操作，使用链表存储结构更加方便
-		ptr head, rear;//只需要把头指针和尾指针放入,用指针修改数据
-		int qsize;
-		queue(){
-			head= new node;
-			rear = head;
-			head->next = NULL;
-			qsize = 0;
-		}
-	    void push(ElemType e) {
-			ptr p =new node;
-			p->data = e; p->next = NULL;
-			rear->next = p;
 			//先申请空间，修改数据的值，再修改尾指针
 			rear = p;
 			qsize++;
