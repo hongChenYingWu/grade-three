@@ -1,0 +1,70 @@
+#include<iostream>
+#include<string>
+using namespace std;
+/****************/
+#define MAXQSIZE 5
+//当可以预估队列的最大长度，可以用循环队列，否则还是用链队列
+typedef string ElemType;
+//循环队列（数组的存储结构）
+namespace a {
+	struct queue {
+		ElemType *base;
+		int head, rear;//成员变量设置头尾指针
+		queue() {
+			base = new string[MAXQSIZE];
+			head = rear = 0;
+		}
+		bool full() {
+			//判断队列是否满，为了不与判断队列是否为空相重合，rear与head正好相差1个元素作为队列满的依据
+			if ((rear + 1) % MAXQSIZE == head) return true;
+			else return false;
+		}
+		bool empty() {
+			if (rear==head) return true;
+			else   return false;
+		}
+		void push(ElemType e){
+			base[rear] = e;
+			rear = (rear + 1) % MAXQSIZE;
+			//循环队列每次指针+1都要对MAXQSIZE取模，超出范围则循环
+		}
+		ElemType front() {
+			return base[head];
+		}
+		void pop() {
+			head = (head + 1) % MAXQSIZE;
+		}
+		int size() {
+			return(rear + MAXQSIZE - head) % MAXQSIZE;
+			//rear要加MAXQSIZE防止rear已经经过了循环
+		}
+	};
+}
+/******************/
+int main() {
+	a::queue que;
+	string str; char c;
+	cout << "1.挂号"<<endl<<"2.下一位"<<endl<<"3.查询等待人数"<<endl;
+	while (cin >> c) {
+		switch (c) {
+		case '1':
+			cin >> str;
+			if (!que.full()) {
+				que.push(str);
+				cout << "挂号成功！" << endl;
+			}
+			else cout << "挂号人数已满！";
+			break;
+		case '2':
+			if (!que.empty()) {
+				cout << "下一位就诊的是：" << que.front() << endl;
+				que.pop();
+			}
+			else cout << "无挂号记录" << endl;
+			 break;
+		case '3':
+			cout << "当前等待人数为：" << que.size()<<endl;
+		}
+	}
+	return 0;
+}
