@@ -1,0 +1,43 @@
+#include<iostream>
+#include<string>
+using namespace std;
+	class String :public string {
+		//对string继承，并为其增加insert_all,replace_all方法
+	public:
+		//对find方法进行重写覆盖父类中的方法
+		int find( string t, int pos) {
+			int n = this->size(), m = t.size();
+			for (int i = pos; i <= n - m; i++) {
+				string sub = this->substr(i, m);
+				if (sub == t)  return i;
+			}
+			return string::npos;
+		}
+		int find(string t) {
+			int n = this->size(), m = t.size();
+			for (int i = 0; i <= n - m; i++) {
+				string sub = this->substr(i, m);
+				if (sub == t)  return i;
+			}
+			return string::npos;
+		}
+		void insert_all(string a,string b) {
+			int pos = 0;
+			while (this->find(a, pos) != string::npos) {
+				this->insert(this->find(a, pos), b);
+				pos = this->find(a, pos) + a.size();
+			}
+		}
+		void replace_all(string a,string b) {
+			while (this->find(a)!= string::npos) {
+				this->replace(this->find(a),a.size(), b);
+			}
+		}
+	};
+int main() {
+	String str;
+	getline(cin,str);
+	str.replace_all("朱成", "大帅哥");
+	cout << str;
+	return 0;
+}
